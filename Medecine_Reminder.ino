@@ -7,9 +7,11 @@ SoftwareSerial Module( 10 , 11 );
 
 String PhoneNumber = "09981722700";
 
-String AlarmMorning = "03:14";
+String AlarmMorning = "03:17";
 String AlarmAfternoon = "12:00";
 String AlarmEvening = "06:00";
+
+bool CanText = false;
 
 
 void setup() {
@@ -24,10 +26,16 @@ void loop() {
   delay(10000);
   if(CurrentTime == AlarmMorning)
   {
+    CanText = true;
+  }
+
+  if (CanText)
+  {
     Serial.println("Sending Message");
     SendMessage(PhoneNumber);
     Serial.println("Finish Sending Message");
   }
+  
 
 
 }
@@ -49,4 +57,9 @@ void SendMessage(String p_PhoneNumber) {
   Module.print("Time to Drink your Antibiotic Medicine");
   delay( 100 );
   Module.print( ( char )26 );
+}
+
+void ReadMessage() {
+  Module.println( "AT+CMGF=1\r" );
+  Module.println( "AT+CNMI=1,2,0,0,0" );
 }
